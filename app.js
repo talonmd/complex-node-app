@@ -7,6 +7,11 @@ const csrf = require("csurf")
 const app = express()
 const sanitizeHTML = require("sanitize-html")
 
+app.use(express.urlencoded({ extended: false })) // to accept traditional html form data
+app.use(express.json()) // to accept json formatted data
+
+app.use("/api", require("./router-api"))
+
 let sessionOptions = session({
   secret: "your mom",
   store: new MongoStore({ client: require("./db") }),
@@ -39,9 +44,6 @@ app.use(function (req, res, next) {
 })
 
 const router = require("./router")
-
-app.use(express.urlencoded({ extended: false })) // to accept traditional html form data
-app.use(express.json()) // to accept json formatted data
 
 app.use(express.static("public"))
 app.set("views", "views")
